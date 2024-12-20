@@ -1,4 +1,10 @@
 document.addEventListener("DOMContentLoaded", () => {
+  // Get today's date in the format YYYY-MM-DD
+  const today = new Date().toISOString().split("T")[0];
+
+  // Set the default value of the date input to today's date
+  document.getElementById("date").value = today;
+
   const form = document.getElementById("purchaseForm");
   const statusMessage = document.getElementById("statusMessage");
   const purchasesTable = document.getElementById("purchasesTable");
@@ -9,6 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const formData = new FormData();
     formData.append("date", form.date.value);
+    formData.append("business", form.business.value);
     formData.append("amount", parseFloat(form.amount.value));
     formData.append("category", form.category.value);
     formData.append("description", form.description.value);
@@ -47,13 +54,14 @@ document.addEventListener("DOMContentLoaded", () => {
           const row = document.createElement("tr");
           row.innerHTML = `
                         <td>${purchase.date}</td>
+                        <td>${purchase.business}</td>
                         <td>${purchase.amount.toFixed(2)}</td>
                         <td>${purchase.category}</td>
                         <td>${purchase.description}</td>
                         <td>
                             ${
                               purchase.photo
-                                ? `<img src="/photos/${purchase.photo}" alt="Purchase Photo" style="max-width: 100px; max-height: 100px;">`
+                                ? `<img src="data:image/jpeg;base64,${purchase.photo}" alt="Purchase Photo" style="max-width: 100px; max-height: 100px;">`
                                 : "No Photo"
                             }
                         </td>
