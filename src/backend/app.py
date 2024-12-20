@@ -1,39 +1,82 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, request, jsonify, render_template
 import sqlite3
+import base64
 
+# Configuration
 app = Flask(__name__)
+DATABASE = 'budget.db'
 
-# Database initialization
+# Initialize database
 def init_db():
-    conn = sqlite3.connect('budget.db')
-    cursor = conn.cursor()
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS purchases (
-            id INTEGER PRIMARY KEY NOT NULL,
-            date TEXT NOT NULL,
-            amount REAL NOT NULL,
-            category TEXT,
-            description TEXT,
-            photo BLOB
-        )
-    ''')
-    conn.commit()
-    conn.close()
+    with sqlite3.connect(DATABASE) as conn:
+        cursor = conn.cursor()
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS purchases (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                date TEXT NOT NULL,
+                amount REAL NOT NULL,
+                category TEXT NOT NULL,
+                description TEXT,
+                photo BLOB
+            )
+        ''')
+        conn.commit()
 
 @app.route('/')
 def home():
-    # Fetch current month's spending
-    return render_template('home.html')
+    return render_template('index.html')
 
 @app.route('/add', methods=['POST'])
 def add_purchase():
-    # Add purchase to the database
-    return jsonify({"success": True})
+    # Get form data
+    date = request.form.get('date')
+    amount = request.form.get('amount')
+    category = request.form.get('category')
+    description = request.form.get('description')
+    photo_file = request.files.get('photo')
 
-@app.route('/month/<int:year>/<int:month>')
-def view_month(year, month):
-    # Fetch and return purchases for the month
-    return render_template('month.html')
+    # Convert photo to binary if provided
+    photo_blob = None
+    if photo_file:
+        photo_blob = photo_file.read()  # Read file as binary
+
+    # Insert data into database
+    try:
+        with sqlite3.connect(DATABASE) as conn:
+            cursor = conn.cursor()
+            cursor.execute('''
+                INSERT INTO purchases (date, amount, category, description, photo)
+                VALUES (?, ?, ?, ?, ?)
+            ''', (date, amount, category, description, photo_blob))
+            conn.commit()
+        return jsonify({'success': True})
+    except Exception as e:
+        print(f"Error: {e}")
+        return jsonify({'success': False, 'error': str(e)})
+
+@app.route('/month-data', methods=['GET'])
+def get_month_data():
+    # Fetch all purchases
+    try:
+        with sqlite3.connect(DATABASE) as conn:
+            cursor = conn.cursor()
+            cursor.execute('SELECT date, amount, category, description, photo FROM purchases')
+            purchases = []
+            for row in cursor.fetchall():
+                photo_b64 = None
+                if row[4]:  # Convert photo BLOB to base64
+                    photo_b64 = base64.b64encode(row[4]).decode('utf-8')
+                purchases.append({
+                    'date': row[0],
+                    'amount': row[1],
+                    'category': row[2],
+                    'description': row[3],
+                    'photo': photo_b64
+                })
+        return jsonify(purchases)
+    except Exception as e:
+        print(f"Error: {e}")
+        return jsonify({'error': str(e)})
 
 if __name__ == '__main__':
     init_db()
