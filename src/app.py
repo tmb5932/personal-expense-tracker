@@ -31,9 +31,9 @@ def home():
 def add_page():
     return render_template('add.html')
 
-@app.route('/month')
-def month_page():
-    return render_template('month.html')
+@app.route('/recent')
+def recent_page():
+    return render_template('recent.html')
 
 @app.route('/add', methods=['POST'])
 def add_purchase():
