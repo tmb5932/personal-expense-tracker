@@ -96,60 +96,82 @@ document.addEventListener("DOMContentLoaded", () => {
       });
   }
 
-  // Populate the monthly overview if it exists
+  // Populate the monthly overview if on overview page
   if (monthlyOverview) {
-    fetch("/overview-data") // Adjust endpoint to fetch monthly overview data
+    fetch("/overview-data")
       .then((response) => response.json())
       .then((months) => {
         months.forEach((item) => {
           const div = document.createElement("div");
           div.className = "overview-item";
 
-          // Create a span for the month name
           const monthSpan = document.createElement("span");
           monthSpan.className = "month-name";
           monthSpan.textContent = getMonthName(item.month);
 
-          // Create a span for the total amount
           const totalSpan = document.createElement("span");
           totalSpan.className = "total-amount";
-          totalSpan.textContent = `$${item.total.toFixed(2)}`;
+          totalSpan.textContent = `Total: $${item.total.toFixed(2)}`;
 
-          // Create a container for the pie chart
+          // Container for the pie chart
           const chartContainer = document.createElement("div");
           chartContainer.className = "pie-chart-container";
 
-          // Create a canvas for the pie chart
+          // Canvas for the pie chart
           const canvas = document.createElement("canvas");
           canvas.className = "pie-chart";
-
-          // Append the canvas to the chart container
           chartContainer.appendChild(canvas);
 
-          // Append the spans and chart container to the div
           div.appendChild(monthSpan);
           div.appendChild(totalSpan);
           div.appendChild(chartContainer);
 
           monthlyOverview.appendChild(div);
 
-          // Create the pie chart
-          new Chart(canvas, {
-            type: "pie",
-            data: {
-              labels: ["Spent", "Remaining", "Extra"],
-              datasets: [
-                {
-                  data: [70, 30, 0],
-                  backgroundColor: ["#4CAF50", "#FFC107", "#F44336"],
+          fetch(`/monthly-category-data?month=${item.month}`)
+            .then((response) => response.json())
+            .then((categorical_data) => {
+              if (!Array.isArray(categorical_data)) {
+                throw new Error("Expected an array but got something else");
+              }
+
+              const categories = categorical_data.map((data) => data.category);
+              const totals = categorical_data.map(
+                (data) => data.category_amount
+              ); // Adjusted to match the SQL query result
+
+              // Create the pie chart of categories
+              new Chart(canvas, {
+                type: "pie",
+                data: {
+                  labels: categories,
+                  datasets: [
+                    {
+                      data: totals,
+                      backgroundColor: [
+                        "#FF6384", // Pink
+                        "#36A2EB", // Blue
+                        "#FFCE56", // Yellow
+                        "#4BC0C0", // Teal
+                        "#9966FF", // Purple
+                        "#FF9F40", // Orange
+                        "#FFCD56", // Light Yellow
+                        "#C9CBCF", // Light Gray
+                        "#FF6384", // Light Pink
+                        "#36A2EB", // Light Blue
+                      ],
+                    },
+                  ],
                 },
-              ],
-            },
-            options: {
-              responsive: true,
-              maintainAspectRatio: false,
-            },
-          });
+                options: {
+                  responsive: true,
+                  maintainAspectRatio: false,
+                },
+              });
+            })
+            .catch((error) => {
+              console.error("Error fetching monthly category data:", error);
+            });
         });
       })
       .catch((error) => {
