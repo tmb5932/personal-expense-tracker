@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify, render_template
-import sqlite3, base64
+import sqlite3
+import base64
 
 # Configuration
 app = Flask(__name__)
