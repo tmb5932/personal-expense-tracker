@@ -15,6 +15,7 @@
       <nav>
         <a href="{{ url_for('home') }}">Home</a>
         <a href="{{ url_for('add_page') }}">Add Purchase</a>
+        <a href="{{ url_for('monthly_page') }}">Monthly Overview</a>
         <a href="{{ url_for('recent_page') }}">View Recent</a>
       </nav>
     </header>
@@ -60,7 +61,7 @@
           autocomplete="off"
         ></textarea>
 
-        <label for="photo">Photo:</label>
+        <label for="photo">Reciept:</label>
         <input
           type="file"
           id="photo"

@@ -20,8 +20,10 @@
       </nav>
     </header>
     <main>
-      <h2>Welcome to Your Expense Tracker</h2>
-      <p>Track your spending and stay on top of your finances.</p>
+      <h2>Monthly Expenses</h2>
+      <div id="monthlyOverview"></div>
     </main>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
   </body>
 </html>

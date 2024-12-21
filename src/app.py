@@ -35,6 +35,10 @@ def add_page():
 def recent_page():
     return render_template('recent.html')
 
+@app.route('/monthly')
+def monthly_page():
+    return render_template('monthly.html')
+
 @app.route('/add', methods=['POST'])
 def add_purchase():
     # Get form data
@@ -85,6 +89,29 @@ def get_month_data():
                     'photo': photo_b64
                 })
         return jsonify(purchases)
+    except Exception as e:
+        print(f"Error: {e}")
+        return jsonify({'error': str(e)})
+
+@app.route('/overview-data', methods=['GET'])
+def get_overview_data():
+    # Fetch all purchases
+    try:
+        with sqlite3.connect(DATABASE) as conn:
+            cursor = conn.cursor()
+            cursor.execute('''
+                SELECT strftime('%Y-%m', date) AS month, SUM(amount) AS total_amount
+                FROM purchases
+                GROUP BY month
+                ORDER BY month DESC
+            ''')
+            monthly_totals = []
+            for row in cursor.fetchall():
+                monthly_totals.append({
+                    'month': row[0],
+                    'total': row[1]
+                })
+        return jsonify(monthly_totals)
     except Exception as e:
         print(f"Error: {e}")
         return jsonify({'error': str(e)})

@@ -7,9 +7,11 @@ body {
 }
 
 header {
-  background: #4b657f;
+  background-color: #4e7aa6;
   color: white;
-  padding: 10px 20px;
+  padding: 1rem 0;
+  text-align: center;
+  /* padding: 10px 20px; */
 }
 
 header h1 {
@@ -98,4 +100,53 @@ footer {
   position: fixed;
   width: 100%;
   bottom: 0;
+}
+
+h2 {
+  color: #4e7aa6;
+}
+
+#monthlyOverview {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+  gap: 1rem;
+  padding: 0;
+}
+
+#monthlyOverview .overview-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #f9f9f9;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+#monthlyOverview .overview-item:nth-child(odd) {
+  background-color: #e9e9e9;
+}
+
+#monthlyOverview .overview-item .month-name {
+  font-weight: bold;
+  color: #155fa9;
+}
+
+#monthlyOverview .overview-item .total-amount {
+  font-weight: bold;
+  color: #333;
+}
+
+#monthlyOverview .overview-item .pie-chart-container {
+  width: 100%;
+  height: 150px;
+  position: relative;
+}
+
+#monthlyOverview .overview-item .pie-chart {
+  width: 100%;
+  height: 100%;
+  position: absolute;
 }
