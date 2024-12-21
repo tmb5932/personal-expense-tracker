@@ -35,21 +35,7 @@ main {
 form label {
   display: block;
   margin: 10px 0 5px;
-}
-
-form input,
-form textarea {
-  width: calc(100% - 30px);
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  box-sizing: border-box;
-}
-
-form input:focus,
-form textarea:focus {
-  border-color: #ff5733;
-  outline: none;
+  font-weight: bold;
 }
 
 button {
@@ -149,4 +135,36 @@ h2 {
   width: 100%;
   height: 100%;
   position: absolute;
+}
+
+select {
+  background-color: #4b657f;
+  color: white;
+}
+
+#customCategory {
+  display: none;
+}
+
+select,
+input[type="text"],
+input[type="number"],
+textarea,
+form input,
+form textarea {
+  width: calc(100% - 30px);
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+select {
+  font-size: 1rem;
+}
+
+form input:focus,
+form textarea:focus {
+  border-color: #ff5733;
+  outline: none;
 }

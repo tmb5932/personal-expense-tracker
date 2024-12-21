@@ -154,3 +154,14 @@ const getMonthName = (dateString) => {
   const date = new Date(year, month - 1); // Create a Date object (month is 0-based)
   return date.toLocaleString("default", { month: "long" }); // Get the full month name
 };
+
+function toggleCustomCategory(select) {
+  const customCategoryInput = document.getElementById("customCategory");
+  if (select.value === "Other") {
+    customCategoryInput.style.display = "block";
+    customCategoryInput.required = true;
+  } else {
+    customCategoryInput.style.display = "none";
+    customCategoryInput.required = false;
+  }
+}
