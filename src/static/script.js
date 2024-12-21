@@ -29,7 +29,12 @@ document.addEventListener("DOMContentLoaded", () => {
     formData.append("date", form.date.value);
     formData.append("business", form.business.value);
     formData.append("amount", parseFloat(form.amount.value));
-    formData.append("category", form.category.value);
+
+    if (form.category.value === "Other") {
+      formData.append("category", form.customCategory.value);
+    } else {
+      formData.append("category", form.category.value);
+    }
     formData.append("description", form.description.value);
 
     const photoFile = form.photo.files[0];
@@ -48,6 +53,10 @@ document.addEventListener("DOMContentLoaded", () => {
         statusMessage.textContent = "Purchase added successfully!";
         form.reset();
         document.getElementById("date").value = tempDate;
+        const customCategoryInput = document.getElementById("customCategory");
+        customCategoryInput.style.display = "none";
+        customCategoryInput.required = false;
+        customCategoryInput.value = "";
       } else {
         statusMessage.textContent = "Error adding purchase.";
       }
@@ -163,5 +172,6 @@ function toggleCustomCategory(select) {
   } else {
     customCategoryInput.style.display = "none";
     customCategoryInput.required = false;
+    customCategoryInput.value = "";
   }
 }
