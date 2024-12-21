@@ -116,6 +116,34 @@ def get_overview_data():
         print(f"Error: {e}")
         return jsonify({'error': str(e)})
 
+@app.route('/monthly-category-data', methods=['GET'])
+def get_monthly_category_data():
+    try:
+        month = request.args.get('month')
+        if not month:
+            return jsonify({'error': 'Month parameter is required'}), 400
+
+        with sqlite3.connect(DATABASE) as conn:
+            cursor = conn.cursor()
+            query = '''
+                SELECT strftime('%Y-%m', date) AS month, category, SUM(amount) AS category_amount
+                FROM purchases
+                WHERE strftime('%Y-%m', date) = ?
+                GROUP BY category
+                ORDER BY category_amount DESC
+            '''
+            cursor.execute(query, (month,))
+            monthly_category_totals = []
+            for row in cursor.fetchall():
+                monthly_category_totals.append({
+                    'category': row[1],
+                    'category_amount': row[2]
+                })
+        return jsonify(monthly_category_totals)
+    except Exception as e:
+        print(f"Error: {e}")
+        return jsonify({'error': str(e)})
+
 if __name__ == '__main__':
     init_db()
     app.run(host='0.0.0.0', port=5000)
