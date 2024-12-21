@@ -1,6 +1,5 @@
 from flask import Flask, request, jsonify, render_template
-import sqlite3
-import base64
+import sqlite3, base64
 
 # Configuration
 app = Flask(__name__)
@@ -70,7 +69,7 @@ def get_month_data():
     try:
         with sqlite3.connect(DATABASE) as conn:
             cursor = conn.cursor()
-            cursor.execute('SELECT date, business, amount, category, description, photo FROM purchases')
+            cursor.execute('SELECT date, business, amount, category, description, photo FROM purchases ORDER BY date DESC')
             purchases = []
             for row in cursor.fetchall():
                 photo_b64 = None
