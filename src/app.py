@@ -27,6 +27,14 @@ def init_db():
 def home():
     return render_template('index.html')
 
+@app.route('/add')
+def add_page():
+    return render_template('add.html')
+
+@app.route('/month')
+def month_page():
+    return render_template('month.html')
+
 @app.route('/add', methods=['POST'])
 def add_purchase():
     # Get form data
@@ -66,7 +74,7 @@ def get_month_data():
             purchases = []
             for row in cursor.fetchall():
                 photo_b64 = None
-                if row[4]:  # Convert photo BLOB to base64
+                if row[5]:  # Convert photo BLOB to base64
                     photo_b64 = base64.b64encode(row[5]).decode('utf-8')
                 purchases.append({
                     'date': row[0],

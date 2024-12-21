@@ -1,9 +1,19 @@
 document.addEventListener("DOMContentLoaded", () => {
   // Get today's date in the format YYYY-MM-DD
-  const today = new Date().toISOString().split("T")[0];
+  const today = new Date();
+
+  const localDate =
+    today.getFullYear() +
+    "-" +
+    String(today.getMonth() + 1).padStart(2, "0") +
+    "-" +
+    String(today.getDate()).padStart(2, "0");
 
   // Set the default value of the date input to today's date
-  document.getElementById("date").value = today;
+  let ele = document.getElementById("date");
+  if (ele) {
+    ele.value = localDate;
+  }
 
   const form = document.getElementById("purchaseForm");
   const statusMessage = document.getElementById("statusMessage");
@@ -14,6 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
     e.preventDefault();
 
     const formData = new FormData();
+    let tempDate = form.date.value;
     formData.append("date", form.date.value);
     formData.append("business", form.business.value);
     formData.append("amount", parseFloat(form.amount.value));
@@ -35,6 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (result.success) {
         statusMessage.textContent = "Purchase added successfully!";
         form.reset();
+        document.getElementById("date").value = tempDate;
       } else {
         statusMessage.textContent = "Error adding purchase.";
       }
