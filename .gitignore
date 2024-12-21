@@ -171,4 +171,4 @@ cython_debug/
 .pypirc
 
 # DB Data
-budget.bd
+budget.db
