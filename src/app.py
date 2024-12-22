@@ -97,14 +97,19 @@ def get_month_data():
 def get_overview_data():
     # Fetch all purchases
     try:
+        sort_by = request.args.get('sort')
+        if not sort_by:
+            sort_by = 'DESC'
+
         with sqlite3.connect(DATABASE) as conn:
             cursor = conn.cursor()
-            cursor.execute('''
+            query = f'''
                 SELECT strftime('%Y-%m', date) AS month, SUM(amount) AS total_amount
                 FROM purchases
                 GROUP BY month
-                ORDER BY month DESC
-            ''')
+                ORDER BY month {sort_by}
+            '''
+            cursor.execute(query)
             monthly_totals = []
             for row in cursor.fetchall():
                 monthly_totals.append({
@@ -121,10 +126,13 @@ def get_monthly_category_data():
     try:
         month = request.args.get('month')
         if not month:
-            return jsonify({'error': 'Month parameter is required'}), 400
-
-        with sqlite3.connect(DATABASE) as conn:
-            cursor = conn.cursor()
+            query = '''
+                SELECT strftime('%Y-%m', date) AS month, category, SUM(amount) AS category_amount
+                FROM purchases
+                GROUP BY category
+                ORDER BY category_amount DESC
+            '''
+        else:
             query = '''
                 SELECT strftime('%Y-%m', date) AS month, category, SUM(amount) AS category_amount
                 FROM purchases
@@ -132,7 +140,15 @@ def get_monthly_category_data():
                 GROUP BY category
                 ORDER BY category_amount DESC
             '''
-            cursor.execute(query, (month,))
+
+        with sqlite3.connect(DATABASE) as conn:
+            cursor = conn.cursor()
+            
+            if not month:
+                cursor.execute(query)
+            else:
+                cursor.execute(query, (month,))
+            
             monthly_category_totals = []
             for row in cursor.fetchall():
                 monthly_category_totals.append({

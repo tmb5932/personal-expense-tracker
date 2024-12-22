@@ -22,6 +22,17 @@
     <main>
       <h2>Welcome to Your Expense Tracker</h2>
       <p>Track your spending and stay on top of your finances.</p>
+      <h2>All Time Data</h2>
+      <div id="dataContainer">
+        <div id="lineGraphContainer">
+          <canvas id="monthlySpendingChart" width="400" height="200"></canvas>
+        </div>
+        <div id="pieChartContainer">
+          <canvas id="allTimeCategoriesChart" width="400" height="200"></canvas>
+        </div>
+      </div>
     </main>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
   </body>
 </html>

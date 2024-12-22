@@ -19,6 +19,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const statusMessage = document.getElementById("statusMessage");
   const purchasesTable = document.getElementById("purchasesTable");
   const monthlyOverview = document.getElementById("monthlyOverview");
+  const monthlySpendingChart = document.getElementById("monthlySpendingChart");
+  const allTimeCategoriesChart = document.getElementById(
+    "allTimeCategoriesChart"
+  );
 
   // Handle form submission
   form?.addEventListener("submit", async (e) => {
@@ -68,7 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Populate the purchases table if it exists
   if (purchasesTable) {
-    fetch("/month-data") // Adjust endpoint to fetch data
+    fetch("/month-data")
       .then((response) => response.json())
       .then((purchases) => {
         const tbody = purchasesTable.querySelector("tbody");
@@ -117,7 +121,6 @@ document.addEventListener("DOMContentLoaded", () => {
           const chartContainer = document.createElement("div");
           chartContainer.className = "pie-chart-container";
 
-          // Canvas for the pie chart
           const canvas = document.createElement("canvas");
           canvas.className = "pie-chart";
           chartContainer.appendChild(canvas);
@@ -138,7 +141,7 @@ document.addEventListener("DOMContentLoaded", () => {
               const categories = categorical_data.map((data) => data.category);
               const totals = categorical_data.map(
                 (data) => data.category_amount
-              ); // Adjusted to match the SQL query result
+              );
 
               // Create the pie chart of categories
               new Chart(canvas, {
@@ -178,12 +181,105 @@ document.addEventListener("DOMContentLoaded", () => {
         console.error("Error fetching monthly overview data:", error);
       });
   }
+  if (monthlySpendingChart) {
+    fetch("/overview-data?sort=ASC")
+      .then((response) => response.json())
+      .then((data) => {
+        const ctx = document
+          .getElementById("monthlySpendingChart")
+          .getContext("2d");
+        new Chart(ctx, {
+          type: "line",
+          data: {
+            labels: data.map((item) => getMonthYear(item.month)),
+            datasets: [
+              {
+                label: "Total Spent",
+                data: data.map((item) => item.total),
+                borderColor: "#36A2EB",
+                backgroundColor: "rgba(54, 162, 235, 0.2)",
+                fill: true,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            scales: {
+              x: {
+                title: {
+                  display: true,
+                  text: "Month",
+                },
+              },
+              y: {
+                title: {
+                  display: true,
+                  text: "Total Spent",
+                },
+              },
+            },
+          },
+        });
+      })
+      .catch((error) =>
+        console.error("Error fetching monthly total data:", error)
+      );
+
+    fetch(`/monthly-category-data`)
+      .then((response) => response.json())
+      .then((categorical_data) => {
+        if (!Array.isArray(categorical_data)) {
+          throw new Error("Expected an array but got something else");
+        }
+        console.log(categorical_data);
+        const categories = categorical_data.map((data) => data.category);
+        const totals = categorical_data.map((data) => data.category_amount);
+
+        // Create the pie chart of categories
+        new Chart(allTimeCategoriesChart, {
+          type: "pie",
+          data: {
+            labels: categories,
+            datasets: [
+              {
+                data: totals,
+                backgroundColor: [
+                  "#FF6384", // Pink
+                  "#36A2EB", // Blue
+                  "#FFCE56", // Yellow
+                  "#4BC0C0", // Teal
+                  "#9966FF", // Purple
+                  "#FF9F40", // Orange
+                  "#FFCD56", // Light Yellow
+                  "#C9CBCF", // Light Gray
+                  "#FF6384", // Light Pink
+                  "#36A2EB", // Light Blue
+                ],
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+          },
+        });
+      })
+      .catch((error) => {
+        console.error("Error fetching monthly category data:", error);
+      });
+  }
 });
 
 const getMonthName = (dateString) => {
-  const [year, month] = dateString.split("-"); // Split the date string
-  const date = new Date(year, month - 1); // Create a Date object (month is 0-based)
-  return date.toLocaleString("default", { month: "long" }); // Get the full month name
+  const [year, month] = dateString.split("-");
+  const date = new Date(year, month - 1);
+  return date.toLocaleString("default", { month: "long" });
+};
+
+const getMonthYear = (dateString) => {
+  const [year, month] = dateString.split("-");
+  return `${getMonthName(dateString)} ${year}`;
 };
 
 function toggleCustomCategory(select) {

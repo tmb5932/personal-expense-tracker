@@ -11,7 +11,6 @@ header {
   color: white;
   padding: 1rem 0;
   text-align: center;
-  /* padding: 10px 20px; */
 }
 
 header h1 {
@@ -22,10 +21,20 @@ nav a {
   color: white;
   margin: 0 10px;
   text-decoration: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  transition: background-color 0.3s, transform 0.2s;
 }
 
 nav a:hover {
-  text-decoration: underline;
+  text-decoration: none;
+  background-color: #ff5733;
+  color: white;
+}
+
+nav a:active {
+  transform: scale(0.95);
+  background-color: #e04e2a;
 }
 
 main {
@@ -168,4 +177,25 @@ form input:focus,
 form textarea:focus {
   border-color: #ff5733;
   outline: none;
+}
+
+#dataContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+#pieChartContainer,
+#lineGraphContainer {
+  flex: 1 1 45%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+}
+
+#monthlySpendingChart,
+#allTimeCategoriesChart {
+  width: 100%;
+  max-height: 500px;
 }
