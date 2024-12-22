@@ -87,25 +87,21 @@ td {
   text-align: left;
 }
 
-footer {
-  text-align: center;
-  padding: 10px 0;
-  background: #4b657f;
-  color: white;
-  position: fixed;
-  width: 100%;
-  bottom: 0;
-}
-
 h2 {
   color: #4e7aa6;
 }
 
 #monthlyOverview {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 1rem;
   padding: 0;
+}
+
+@media (min-width: 900px) {
+  #monthlyOverview {
+    grid-template-columns: repeat(3, minmax(300px, 1fr));
+  }
 }
 
 #monthlyOverview .overview-item {
