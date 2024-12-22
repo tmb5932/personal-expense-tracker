@@ -143,6 +143,23 @@ document.addEventListener("DOMContentLoaded", () => {
                 (data) => data.category_amount
               );
 
+              const categoryColors = {
+                Restaurants: "#FF5733", // Red
+                "Furniture/Home": "#33FF57", // Green
+                "Gas/Car": "#3357FF", // Blue
+                Clothes: "#FF33A1", // Pink
+                "School/Office Supplies": "#FF8C33", // Orange
+                Misc: "#33FFF5", // Cyan
+                Groceries: "#8C33FF", // Purple
+              };
+
+              const defaultColor = "grey"; // Default color for categories not in the mapping
+
+              const backgroundColors = categories.map((category) => {
+                const color = categoryColors[category] || defaultColor;
+                return color;
+              });
+
               // Create the pie chart of categories
               new Chart(canvas, {
                 type: "pie",
@@ -151,18 +168,7 @@ document.addEventListener("DOMContentLoaded", () => {
                   datasets: [
                     {
                       data: totals,
-                      backgroundColor: [
-                        "#FF6384", // Pink
-                        "#36A2EB", // Blue
-                        "#FFCE56", // Yellow
-                        "#4BC0C0", // Teal
-                        "#9966FF", // Purple
-                        "#FF9F40", // Orange
-                        "#FFCD56", // Light Yellow
-                        "#C9CBCF", // Light Gray
-                        "#FF6384", // Light Pink
-                        "#36A2EB", // Light Blue
-                      ],
+                      backgroundColor: backgroundColors,
                     },
                   ],
                 },
@@ -232,9 +238,26 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!Array.isArray(categorical_data)) {
           throw new Error("Expected an array but got something else");
         }
-        console.log(categorical_data);
+
         const categories = categorical_data.map((data) => data.category);
         const totals = categorical_data.map((data) => data.category_amount);
+
+        const categoryColors = {
+          Restaurants: "#FF5733", // Red
+          "Furniture/Home": "#33FF57", // Green
+          "Gas/Car": "#3357FF", // Blue
+          Clothes: "#FF33A1", // Pink
+          "School/Office Supplies": "#FF8C33", // Orange
+          Misc: "#33FFF5", // Cyan
+          Groceries: "#8C33FF", // Purple
+        };
+
+        const defaultColor = "grey"; // Default color for categories not in the mapping
+
+        const backgroundColors = categories.map((category) => {
+          const color = categoryColors[category] || defaultColor;
+          return color;
+        });
 
         // Create the pie chart of categories
         new Chart(allTimeCategoriesChart, {
@@ -244,18 +267,7 @@ document.addEventListener("DOMContentLoaded", () => {
             datasets: [
               {
                 data: totals,
-                backgroundColor: [
-                  "#FF6384", // Pink
-                  "#36A2EB", // Blue
-                  "#FFCE56", // Yellow
-                  "#4BC0C0", // Teal
-                  "#9966FF", // Purple
-                  "#FF9F40", // Orange
-                  "#FFCD56", // Light Yellow
-                  "#C9CBCF", // Light Gray
-                  "#FF6384", // Light Pink
-                  "#36A2EB", // Light Blue
-                ],
+                backgroundColor: backgroundColors,
               },
             ],
           },
