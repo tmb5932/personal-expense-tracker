@@ -37,6 +37,6 @@ The Expense Tracker is a Flask-based web application designed to help users mana
 
 This project was initially made as a way to stay in practice over Winter break from College, but also from a specific (extremely minor) issue in my life. I track my expenses, as I find it interesting to look at how much I spend each month, and where that money goes.
 
-The issue with existing (and free) budgeting apps that I have tried is that they are either filled with ads, give a limited amount of saves, or simply are confusing to use or unintuitive. By creating this, I hope to not only solve my issue of using such apps, but I can customize it exactly as I want, allowing for ease of use and access to any information I wish, at any time.
+The issue with existing (and free) budgeting apps that I have tried is that they are either filled with ads, give a limited amount of saves, or simply are unintuitive or confusing to use. By creating this, I hope to not only solve my issue of using such apps, but I can customize it exactly as I want, allowing for ease of use and access to any information I wish, at any time.
 
 **Made by Travis Brown**
